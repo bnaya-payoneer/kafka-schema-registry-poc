@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace KafkaX;
 public static class KafkaProduceExtensions
 {
-    public static async Task<DeliveryResult<TValue>> ProduceXAsync<TValue>(
+    public static async Task<DeliveryResult<Null, TValue>> ProduceXAsync<TValue>(
         this IProducer<Null, byte[]> producer,
         string topic,
         Message<Null, TValue> message,
@@ -26,5 +26,6 @@ public static class KafkaProduceExtensions
         //};
         //var response = await producer.ProduceAsync(topic, message, cancellationToken);
         //return response;
+        throw new NotImplementedException();
     }
 }

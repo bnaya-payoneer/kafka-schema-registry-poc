@@ -22,5 +22,6 @@ public static class KafkaConsumerExtensions
         // TODO: var item = Avro.Deserialize(schema, buffer)
         // var response = new ConsumeResult<Null, TValue>(item);
         // return response;
+        throw new NotImplementedException();
     }
 }
