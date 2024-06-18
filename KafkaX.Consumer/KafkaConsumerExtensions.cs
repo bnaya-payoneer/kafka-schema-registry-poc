@@ -11,11 +11,11 @@ namespace KafkaX;
 
 public static class KafkaConsumerExtensions
 {
-    public static async Task<ConsumeResult<Null, TValue>> ConsumeX<TValue>(
-                                this IConsumer<Null, byte[]> consumer,
+    public static async Task<ConsumeResult<Ignore, TValue>> ConsumeXAsync<TValue>(
+                                this IConsumer<Ignore, byte[]> consumer,
                                 CancellationToken cancellationToken)
     {
-        ConsumeResult<Null, byte[]> result = consumer.Consume(cancellationToken);
+        ConsumeResult<Ignore, byte[]> result = consumer.Consume(cancellationToken);
         // TODO: fetch the schema (scemaKey, scemaVersion)
         byte[] buffer = result.Message.Value;
         // TODO: get the identifier from the header

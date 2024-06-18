@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 namespace KafkaX;
 public static class KafkaProduceExtensions
 {
-    public static async Task<DeliveryResult<Null, TValue>> ProduceXAsync<TValue>(
-        this IProducer<Null, byte[]> producer,
+    public static async Task<DeliveryResult<Ignore, TValue>> ProduceXAsync<TValue>(
+        this IProducer<Ignore, byte[]> producer,
         string topic,
-        Message<Null, TValue> message,
+        TValue payload,
         CancellationToken cancellationToken = default(CancellationToken))
         where TValue : IKafkaIdentifier
     {
         // TODO: fetch the schema (scemaKey, scemaVersion)
         // TODO: var item = Avro.Serialize(schema, buffer)
-        //var message = new Message<Null, string>
+        //var message = new Message<Ignore, string>
         //{
         //    Value = item,
         //    //Headers =

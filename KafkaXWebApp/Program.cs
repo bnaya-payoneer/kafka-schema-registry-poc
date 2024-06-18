@@ -1,11 +1,28 @@
+using Confluent.Kafka;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var services = builder.Services;
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+
+services.AddSingleton((sp) =>
+{
+    var cfg = sp.GetRequiredService<IConfiguration>();
+    var kafkaUrls = cfg["Urls:Kafka"] ?? Environment.GetEnvironmentVariable("KAFKA_URLS") ?? "localhost:9092";
+
+    return new ProducerConfig
+    {
+        BootstrapServers = kafkaUrls, // Kafka server address
+        ClientId = "otel-demo-producer", // Identifier for the client
+        Acks = Acks.All, // Wait for all in-sync replicas to acknowledge the message
+        SecurityProtocol = SecurityProtocol.Plaintext,
+        ApiVersionRequest = true,
+    };
+});
 
 var app = builder.Build();
 

@@ -4,10 +4,16 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>KafkaXWebApp</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\KafkaX.Consumer\KafkaX.Consumer.csproj" />
+	  <ProjectReference Include="..\KafkaX.Producer\KafkaX.Producer.csproj" />
 	</ItemGroup>
 
 </Project>
