@@ -10,6 +10,10 @@ db.createCollection("schema", {
                 version: {
                     bsonType: "int"
                 },
+                type: {
+                    bsonType: "string",
+                    description: "The schema type [Avro,etc.]"
+                },
                 definition: {
                     bsonType: "string",
                     description: "The schema structure"

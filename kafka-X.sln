@@ -16,9 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaX.Abstractions", "KafkaX.Abstractions\KafkaX.Abstractions.csproj", "{516F11FB-EB40-4EE5-A9D3-282D8ECCF603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaX.Consumer", "KafkaX.Consumer\KafkaX.Consumer.csproj", "{EE1579A4-5E5A-41CB-9140-04839262192A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaX.Consumer", "KafkaX.Consumer\KafkaX.Consumer.csproj", "{EE1579A4-5E5A-41CB-9140-04839262192A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaX.Producer", "KafkaX.Producer\KafkaX.Producer.csproj", "{5ECD7F25-00D2-4463-9784-251B78D0D745}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaX.Producer", "KafkaX.Producer\KafkaX.Producer.csproj", "{5ECD7F25-00D2-4463-9784-251B78D0D745}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kafka", "Kafka", "{757E4F75-9E63-403C-ADA9-E1765DA83631}"
 	ProjectSection(SolutionItems) = preProject
@@ -29,9 +29,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBs", "DBs", "{55248068-613
 	ProjectSection(SolutionItems) = preProject
 		Compose\Databases\docker-compose.yml = Compose\Databases\docker-compose.yml
 		Compose\Databases\init-mongo.js = Compose\Databases\init-mongo.js
+		Compose\Databases\init-postgres.sql = Compose\Databases\init-postgres.sql
+		Compose\Databases\init-sqlserver.sql = Compose\Databases\init-sqlserver.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaXWebApp", "KafkaXWebApp\KafkaXWebApp.csproj", "{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaXWebApp", "KafkaXWebApp\KafkaXWebApp.csproj", "{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.SchemaRegistry.SqlServerProvider", "Kafka-X.SchemaRegistry.SqlServerProvider\Kafka-X.SchemaRegistry.SqlServerProvider.csproj", "{A19DCC70-84F8-4326-A17B-072F7707C21E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +59,10 @@ Global
 		{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

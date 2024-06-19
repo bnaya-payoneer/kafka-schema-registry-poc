@@ -1,19 +1,38 @@
 version: '3.9'
-name: databases-coralogix
+name: databases-kafka-x
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sqlServer-coralogix
+    container_name: sqlServer-kafka-x
     environment:
       SA_PASSWORD: "MasadNetunim12!@"
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
     restart: unless-stopped
+    volumes:
+      - sqlserver-db-data:/var/opt/mssql
+
+  sqlserver-init:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: sqlServer-init-kafka-x
+    depends_on:
+      - sqlserver
+    environment:
+      SA_PASSWORD: "MasadNetunim12!@"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./init-sqlserver.sql:/init/init-sqlserver.sql
+    command: >
+      /bin/bash -c "
+        for i in {1..50}; do
+          /opt/mssql-tools/bin/sqlcmd -S sqlserver -U SA -P $$SA_PASSWORD -Q 'SELECT 1' && break || sleep 1;
+        done;
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U SA -P $$SA_PASSWORD -i /init/init-sqlserver.sql"
 
   mongodb:
     image: mongo:latest
-    container_name: mongo-db
+    container_name: mongo-db-kafka-x
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: 1234
@@ -25,9 +44,25 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: postgres-db
+    container_name: postgres-db-kafka-x
     environment:
       POSTGRES_PASSWORD: MasadNetunim12!@
     ports:
       - "5432:5432"
     restart: unless-stopped
+    volumes:
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+
+  postgres-init:
+    image: postgres:latest
+    container_name: postgres-db-init-kafka-x
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: MasadNetunim12!@
+    volumes:
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres-db-data:
+  sqlserver-db-data:
