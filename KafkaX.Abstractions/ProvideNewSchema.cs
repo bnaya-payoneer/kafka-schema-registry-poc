@@ -12,4 +12,4 @@ namespace KafkaX;
 /// <param name="key">The key.</param>
 /// <param name="version">The version.</param>
 /// <returns>The schema definition</returns>
-public delegate Task<string> ProvideNewSchema(string key, int version);
+public delegate Task<byte[]> ProvideNewSchema(string key, int version);
