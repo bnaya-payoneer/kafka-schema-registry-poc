@@ -9,7 +9,7 @@ namespace KafkaX;
 
 public static class AvroSerializationExtensions
 {
-    private static SerializerSchemaData<T> ExtractSchemaData<T>(T data)
+    private static SerializerSchemaData<T> ExtractSchemaData<T>()
     {
         System.Type writerType = typeof(T);
         // if (!(writerType != typeof (ISpecificRecord)))
@@ -45,23 +45,59 @@ public static class AvroSerializationExtensions
         return schemaData;
     }
 
+    //public static byte[] SerializeToAvro<T>(this T data)
+    //    where T : ISpecificRecord
+    //{
+    //    string type = data.GetType().FullName!;
+    //    byte[] key = Encoding.UTF8.GetBytes(type);
+    //    var singleSchemaData = ExtractSchemaData(data);
+    //    using (MemoryStream output = new MemoryStream(1024))
+    //    {
+    //        using (BinaryWriter binaryWriter = new BinaryWriter(output))
+    //        {
+    //            output.WriteByte((byte)0);
+    //            binaryWriter.Write(key);
+    //            var encoder = (Encoder)new BinaryEncoder(output);
+    //            singleSchemaData.AvroWriter.Write(data, encoder);
+    //            var array = output.ToArray();
+    //            return array;
+    //        }
+    //    }
+    //}
+
+    //public static T DeserializeFromAvro<T>(this ReadOnlyMemory<byte> data)
+    //    where T : ISpecificRecord
+    //{ 
+    //}
+
+
     public static byte[] SerializeToAvro<T>(this T data)
         where T : ISpecificRecord
     {
-        string type = data.GetType().FullName!;
-        byte[] key = Encoding.UTF8.GetBytes(type);
-        var singleSchemaData = ExtractSchemaData(data);
-        using (MemoryStream output = new MemoryStream(1024))
-        {
-            using (BinaryWriter binaryWriter = new BinaryWriter(output))
-            {
-                output.WriteByte((byte)0);
-                binaryWriter.Write(key);
-                var encoder = (Encoder)new BinaryEncoder(output);
-                singleSchemaData.AvroWriter.Write(data, encoder);
-                var array = output.ToArray();
-                return array;
-            }
-        }
+        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
+        using var output = new MemoryStream(1024);
+        using var binaryWriter = new BinaryWriter(output);
+        binaryWriter.Write(Encoding.UTF8.GetBytes(typeof(T).FullName));
+        singleSchemaData.AvroWriter.Write(data, new BinaryEncoder(output));
+        var array = output.ToArray();
+        return array;
     }
+
+    public static T DeserializeFromAvro<T>(this byte[] data)
+        where T : ISpecificRecord
+    {
+        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
+        var start = (Encoding.UTF8.GetBytes(typeof(T).FullName)).Length;
+
+        var subArrayLength = data.Length - start;
+        var subArray = new byte[subArrayLength];
+        Array.Copy(data, start, subArray, 0, subArrayLength);
+
+        using var input = new MemoryStream(subArray);
+        using var avroStream = new MemoryStream(subArray);
+        var datumReader = new SpecificReader<T>(singleSchemaData.WriterSchema, singleSchemaData.WriterSchema);
+        var decoder = new BinaryDecoder(avroStream);
+        return datumReader.Read(default, decoder);
+    }
+
 }

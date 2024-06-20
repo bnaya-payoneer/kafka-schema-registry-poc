@@ -1,14 +1,16 @@
 ﻿using Avro;
 using Avro.Specific;
 using System.Reflection;
+using Generator.Equals;
 
-namespace AvroSchema;
+namespace KafkaX;
 
 public class SpecificAvroRecord<T> : ISpecificRecord // where T : new()
 {
     private static readonly PropertyInfo[] PROPS = typeof(T).GetAvroProperties();
     public static readonly Schema SCHEMA = Schema.Parse(typeof(T).GetAvroSchema());
 
+    [IgnoreEquality]
     public virtual Schema Schema => SCHEMA;
 
     public virtual object? Get(int fieldPos)

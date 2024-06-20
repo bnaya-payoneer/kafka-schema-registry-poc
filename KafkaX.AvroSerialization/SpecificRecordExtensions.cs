@@ -1,7 +1,7 @@
 ﻿using Avro;
 using System.Reflection;
 
-namespace AvroSchema;
+namespace KafkaX;
 
 public static class SpecificRecordExtensions
 {
@@ -19,7 +19,7 @@ public static class SpecificRecordExtensions
         return schema;
     }
 
-    public static PropertyInfo[] GetAvroProperties(this Type type)
+    internal static PropertyInfo[] GetAvroProperties(this Type type)
     {
         if (!type.IsClass || type.IsArray || type.IsAbstract || type.IsInterface)
             throw new ArgumentException("Type must be a non-abstract class.");
