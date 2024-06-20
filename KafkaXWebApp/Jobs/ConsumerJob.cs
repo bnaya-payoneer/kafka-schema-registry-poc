@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using KafkaX;
-using System.Threading;
 using static KafkaX.Constants;
 
 namespace KafkaXWebApp;
@@ -8,14 +7,14 @@ namespace KafkaXWebApp;
 public class ConsumerJob : BackgroundService
 {
     private readonly ILogger<ConsumerJob> _logger;
-    private readonly IConsumer<Ignore, byte[]> _consumer;
+    private readonly IConsumer<Null, byte[]> _consumer;
 
     public ConsumerJob(
         ILogger<ConsumerJob> logger,
         ConsumerConfig config)
     {
         _logger = logger;
-        _consumer = new ConsumerBuilder<Ignore, byte[]>(config).Build();
+        _consumer = new ConsumerBuilder<Null, byte[]>(config).Build();
         _consumer.Subscribe(TOPIC);
 
     }
@@ -24,9 +23,9 @@ public class ConsumerJob : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var result = await _consumer.ConsumeXAsync<Foo>(stoppingToken);
+            var result = await _consumer.ConsumeXAsync<Person>(stoppingToken);
             var data = result.Message.Value;
-            _logger.LogInformation("Consumed [{id}]: {product}", data.Id, data.Product);
+            _logger.LogInformation("Consumed [{name}]: {code}", data.Name, data.Code);
         }
     }
 

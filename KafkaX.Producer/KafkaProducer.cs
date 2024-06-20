@@ -1,42 +1,40 @@
-﻿using Confluent.Kafka;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Avro.Specific;
+using Confluent.Kafka;
 using System.Text;
-using System.Threading.Tasks;
-
-// TODO: understand the Message.Key
 
 namespace KafkaX;
-public class KafkaProducer
+
+public class KafkaProducer : IKafkaProducer
 {
     private readonly ISchemaStorageProvider _storageProvider;
-    private readonly IProducer<Ignore, byte[]> _producer;
+    private readonly IProducer<Null, byte[]> _producer;
 
     public KafkaProducer(
         ISchemaStorageProvider storageProvider,
-        IProducer<Ignore, byte[]> producer)
+        IProducer<Null, byte[]> producer)
     {
         _storageProvider = storageProvider;
         _producer = producer;
     }
 
-    public async Task<DeliveryResult<Ignore, TValue>> ProduceXAsync<TValue>(
+    public async Task<DeliveryResult<Null, byte[]>> ProduceXAsync<TValue>(
         string topic,
         TValue payload,
         int version = -1,
         CancellationToken cancellationToken = default(CancellationToken))
-        //where TValue : IKafkaIdentifier
+        where TValue : ISpecificRecord
     {
-        var schema = _storageProvider.GetOrAddSchemaAsync<TValue>(version);
-        // TODO: var item = Avro.Serialize(schema, buffer)
-        //var message = new Message<Ignore, string>
-        //{
-        //    Value = item,
-        //    //Headers =
-        //};
-        //var response = await producer.ProduceAsync(topic, message, cancellationToken);
-        //return response;
-        throw new NotImplementedException();
+        var schema = await _storageProvider.GetOrAddSchemaAsync<TValue>(version);
+        var buffer = payload.SerializeToAvro();
+
+        var message = new Message<Null, byte[]>
+        {
+            Value = buffer
+        };
+        message.Headers.Add("schema-key", Encoding.UTF8.GetBytes(schema.Identifier.SchemaKey));
+        message.Headers.Add("schema-version", BitConverter.GetBytes(schema.Identifier.SchemaVersion));
+        DeliveryResult<Null, byte[]> response =
+            await _producer.ProduceAsync(topic, message, cancellationToken);
+        return response;
     }
 }

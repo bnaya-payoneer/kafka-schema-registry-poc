@@ -1,8 +1,7 @@
 using Confluent.Kafka;
+using static Confluent.Kafka.ConfigPropertyNames;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 var services = builder.Services;
 services.AddControllers();
@@ -14,7 +13,7 @@ services.AddSingleton((sp) =>
     var cfg = sp.GetRequiredService<IConfiguration>();
     var kafkaUrls = cfg["Urls:Kafka"] ?? Environment.GetEnvironmentVariable("KAFKA_URLS") ?? "localhost:9092";
 
-    return new ProducerConfig
+    var config = new ProducerConfig
     {
         BootstrapServers = kafkaUrls, // Kafka server address
         ClientId = "otel-demo-producer", // Identifier for the client
@@ -22,7 +21,12 @@ services.AddSingleton((sp) =>
         SecurityProtocol = SecurityProtocol.Plaintext,
         ApiVersionRequest = true,
     };
+    var producer =  new ProducerBuilder<Null, byte[]>(config).Build();
+    return producer;
 });
+services.AddSchemaRegistryRepository(builder.Configuration);
+services.AddKafkaXProducer();
+services.AddMemoryCache();
 
 var app = builder.Build();
 

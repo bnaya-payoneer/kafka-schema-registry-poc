@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KafkaX;
+﻿namespace KafkaX;
 
 /// <summary>
 /// The schema data entry
@@ -15,6 +9,6 @@ namespace KafkaX;
 public readonly record struct Schema(SchemaIdentifier Identifier,
                                       byte[] Definition,
                                       DateTimeOffset ModifiedDate)
-{ 
+{
 }
 

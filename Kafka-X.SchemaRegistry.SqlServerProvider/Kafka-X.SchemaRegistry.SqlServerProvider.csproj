@@ -6,5 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KafkaX.Abstractions\KafkaX.Abstractions.csproj" />
+    <ProjectReference Include="..\KafkaX.AvroSerialization\KafkaX.AvroSerialization.csproj" />
   </ItemGroup>
 </Project>

@@ -8,10 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Riok.Mapperly" Version="3.6.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Kafka-X.SchemaRegistry.SqlServerProvider\Kafka-X.SchemaRegistry.SqlServerProvider.csproj" />
 	  <ProjectReference Include="..\KafkaX.Consumer\KafkaX.Consumer.csproj" />
 	  <ProjectReference Include="..\KafkaX.Producer\KafkaX.Producer.csproj" />
 	</ItemGroup>
