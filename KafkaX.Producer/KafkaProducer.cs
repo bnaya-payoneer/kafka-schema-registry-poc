@@ -8,16 +8,24 @@ using System.Threading.Tasks;
 // TODO: understand the Message.Key
 
 namespace KafkaX;
-public static class KafkaProduceExtensions
+public class KafkaProducer
 {
-    public static async Task<DeliveryResult<Ignore, TValue>> ProduceXAsync<TValue>(
+    private readonly ISchemaStorageProvider _storageProvider;
+
+    public KafkaProducer(ISchemaStorageProvider storageProvider)
+    {
+        _storageProvider = storageProvider;
+    }
+
+    public async Task<DeliveryResult<Ignore, TValue>> ProduceXAsync<TValue>(
         this IProducer<Ignore, byte[]> producer,
         string topic,
         TValue payload,
+        int version = -1,
         CancellationToken cancellationToken = default(CancellationToken))
-        where TValue : IKafkaIdentifier
+        //where TValue : IKafkaIdentifier
     {
-        // TODO: fetch the schema (scemaKey, scemaVersion)
+        var schema = _storageProvider.GetOrAddSchemaAsync<TValue>(version);
         // TODO: var item = Avro.Serialize(schema, buffer)
         //var message = new Message<Ignore, string>
         //{

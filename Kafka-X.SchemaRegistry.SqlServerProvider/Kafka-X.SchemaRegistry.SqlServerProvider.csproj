@@ -4,4 +4,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KafkaX.Abstractions\KafkaX.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

@@ -35,7 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBs", "DBs", "{55248068-613
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaXWebApp", "KafkaXWebApp\KafkaXWebApp.csproj", "{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.SchemaRegistry.SqlServerProvider", "Kafka-X.SchemaRegistry.SqlServerProvider\Kafka-X.SchemaRegistry.SqlServerProvider.csproj", "{A19DCC70-84F8-4326-A17B-072F7707C21E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka-X.SchemaRegistry.SqlServerProvider", "Kafka-X.SchemaRegistry.SqlServerProvider\Kafka-X.SchemaRegistry.SqlServerProvider.csproj", "{A19DCC70-84F8-4326-A17B-072F7707C21E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.IntegrationTests", "Tests\Kafka-X.IntegrationTests\Kafka-X.IntegrationTests.csproj", "{50927160-C5EF-437F-94E7-D2A8DED3D619}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A19DCC70-84F8-4326-A17B-072F7707C21E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
