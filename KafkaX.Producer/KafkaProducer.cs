@@ -11,14 +11,17 @@ namespace KafkaX;
 public class KafkaProducer
 {
     private readonly ISchemaStorageProvider _storageProvider;
+    private readonly IProducer<Ignore, byte[]> _producer;
 
-    public KafkaProducer(ISchemaStorageProvider storageProvider)
+    public KafkaProducer(
+        ISchemaStorageProvider storageProvider,
+        IProducer<Ignore, byte[]> producer)
     {
         _storageProvider = storageProvider;
+        _producer = producer;
     }
 
     public async Task<DeliveryResult<Ignore, TValue>> ProduceXAsync<TValue>(
-        this IProducer<Ignore, byte[]> producer,
         string topic,
         TValue payload,
         int version = -1,

@@ -62,23 +62,24 @@ public static class AvroSchemaGenerator
 
     public static byte[] SerializeToAvro<T>(this T obj, Schema schema)
     {
-        var record = new GenericRecord((RecordSchema)schema);
+        throw new NotImplementedException();
+        //var record = new GenericRecord((RecordSchema)schema);
 
-        foreach (var field in schema.Fields)
-        {
-            var property = typeof(T).GetProperty(field.Name, BindingFlags.Public | BindingFlags.Instance);
-            if (property != null)
-            {
-                record.Add(field.Name, property.GetValue(obj));
-            }
-        }
+        //foreach (var field in schema.Fields)
+        //{
+        //    var property = typeof(T).GetProperty(field.Name, BindingFlags.Public | BindingFlags.Instance);
+        //    if (property != null)
+        //    {
+        //        record.Add(field.Name, property.GetValue(obj));
+        //    }
+        //}
 
-        using (var memoryStream = new MemoryStream())
-        {
-            var writer = new SpecificDefaultWriter(schema);
-            var encoder = new BinaryEncoder(memoryStream);
-            writer.Write(record, encoder);
-            return memoryStream.ToArray();
-        }
+        //using (var memoryStream = new MemoryStream())
+        //{
+        //    var writer = new SpecificDefaultWriter(schema);
+        //    var encoder = new BinaryEncoder(memoryStream);
+        //    writer.Write(record, encoder);
+        //    return memoryStream.ToArray();
+        //}
     }
 }

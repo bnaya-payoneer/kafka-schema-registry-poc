@@ -27,7 +27,7 @@ public class DemoController : ControllerBase
                                     //.SetValueSerializer(Serializers.Utf8)
                                     .Build();
         //.BuildWithInstrumentation();
-        await producer.ProduceXAsync(TOPIC, payload);
+        //await producer.ProduceXAsync(TOPIC, payload);
         _logger.LogInformation("Produce [{id}]: {product}", payload.Id, payload.Product);
     }
 }
