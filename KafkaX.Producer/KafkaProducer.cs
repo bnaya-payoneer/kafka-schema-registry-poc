@@ -29,7 +29,8 @@ public class KafkaProducer : IKafkaProducer
 
         var message = new Message<Null, byte[]>
         {
-            Value = buffer
+            Value = buffer,
+            Headers = new Headers()
         };
         message.Headers.Add("schema-key", Encoding.UTF8.GetBytes(schema.Identifier.SchemaKey));
         message.Headers.Add("schema-version", BitConverter.GetBytes(schema.Identifier.SchemaVersion));
