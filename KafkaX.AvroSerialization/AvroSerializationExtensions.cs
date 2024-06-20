@@ -1,7 +1,9 @@
-﻿using Avro.IO;
+﻿using Avro;
+using Avro.IO;
 using Avro.Specific;
 using Confluent.Kafka;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using Encoder = Avro.IO.Encoder;
 
@@ -9,6 +11,113 @@ namespace KafkaX;
 
 public static class AvroSerializationExtensions
 {
+    #region SerializeToAvro
+
+    public static byte[] SerializeToAvro<T>(this T data)
+        where T : ISpecificRecord
+    {
+        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
+        using var output = new MemoryStream(1024);
+        using var binaryWriter = new BinaryWriter(output);
+        binaryWriter.Write(Encoding.UTF8.GetBytes(typeof(T).FullName));
+        singleSchemaData.AvroWriter.Write(data, new BinaryEncoder(output));
+        var array = output.ToArray();
+        return array;
+    }
+
+    #endregion //  SerializeToAvro
+
+    #region DeserializeFromAvro
+
+    public static T DeserializeFromAvro<T>(this byte[] data)
+        where T : ISpecificRecord
+    {
+        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
+        var start = (Encoding.UTF8.GetBytes(typeof(T).FullName)).Length;
+
+        var subArrayLength = data.Length - start;
+        var subArray = new byte[subArrayLength];
+        Array.Copy(data, start, subArray, 0, subArrayLength);
+
+        using var input = new MemoryStream(subArray);
+        using var avroStream = new MemoryStream(subArray);
+        var datumReader = new SpecificReader<T>(singleSchemaData.WriterSchema, singleSchemaData.WriterSchema);
+        var decoder = new BinaryDecoder(avroStream);
+        return datumReader.Read(default, decoder);
+    }
+
+    #endregion //  DeserializeFromAvro
+
+    #region GetAvroSchema
+
+    public static string GetAvroSchema(this Type type)
+    {
+        if (!type.IsClass || type.IsArray || type.IsAbstract || type.IsInterface)
+            throw new ArgumentException("Type must be a non-abstract class.");
+
+        var properties = type.GetAvroProperties();
+
+        var fields = properties.Where(p => p.PropertyType != typeof(Schema))
+            .Select(p => $"{{\"name\":\"{p.Name}\",\"type\":{GetAvroType(p.PropertyType)}}}");
+
+        var schema = $"{{\"type\":\"record\",\"name\":\"{type.Name}\",\"fields\":[{string.Join(",", fields)}]}}";
+        return schema;
+    }
+
+    #endregion //  GetAvroSchema
+
+    #region GetAvroProperties
+
+    internal static PropertyInfo[] GetAvroProperties(this Type type)
+    {
+        if (!type.IsClass || type.IsArray || type.IsAbstract || type.IsInterface)
+            throw new ArgumentException("Type must be a non-abstract class.");
+
+        return type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+    }
+
+    #endregion //  GetAvroProperties
+
+    #region GetAvroType
+
+    private static string GetAvroType(Type type)
+    {
+        return type switch
+        {
+            var t when t == typeof(int) => "\"int\"",
+            var t when t == typeof(long) => "\"long\"",
+            var t when t == typeof(float) => "\"float\"",
+            var t when t == typeof(double) => "\"double\"",
+            var t when t == typeof(bool) => "\"boolean\"",
+            var t when t == typeof(string) => "\"string\"",
+            var t when t == typeof(byte[]) => "\"bytes\"",
+            var t when t.IsEnum => $"{{\"type\":\"enum\",\"name\":\"{t.Name}\",\"symbols\":[{string.Join(",", t.GetEnumNames().Select(enumName => $"\"{enumName}\""))}]}}",
+            var t when t.IsArray => $"{{\"type\":\"array\",\"items\":{GetAvroType(t.GetElementType())}}}",
+            var t when t == typeof(Dictionary<string, object>) => "\"map\"",
+            var t when t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>) => $"{{\"type\":\"map\",\"values\":{GetAvroType(t.GetGenericArguments()[1])}}}",
+            var t when t.IsClass && t != typeof(string) => $"{{\"type\":\"record\",\"name\":\"{t.Name}\",\"fields\":{GetAvroRecordFields(t)}}}",
+            _ => throw new ArgumentException($"Unsupported type: {type.Name}")
+        };
+    }
+
+    #endregion //  GetAvroType
+
+    #region GetAvroRecordFields
+
+    private static string GetAvroRecordFields(Type type)
+    {
+        var properties = type.GetAvroProperties();
+
+        var fields = properties.Where(p => p.PropertyType != typeof(Schema))
+            .Select(p => $"{{\"name\":\"{p.Name}\",\"type\":{GetAvroType(p.PropertyType)}}}");
+
+        return $"[{string.Join(",", fields)}]";
+    }
+
+    #endregion //  GetAvroRecordFields
+
+    #region ExtractSchemaData
+
     private static SerializerSchemaData<T> ExtractSchemaData<T>()
     {
         System.Type writerType = typeof(T);
@@ -45,59 +154,5 @@ public static class AvroSerializationExtensions
         return schemaData;
     }
 
-    //public static byte[] SerializeToAvro<T>(this T data)
-    //    where T : ISpecificRecord
-    //{
-    //    string type = data.GetType().FullName!;
-    //    byte[] key = Encoding.UTF8.GetBytes(type);
-    //    var singleSchemaData = ExtractSchemaData(data);
-    //    using (MemoryStream output = new MemoryStream(1024))
-    //    {
-    //        using (BinaryWriter binaryWriter = new BinaryWriter(output))
-    //        {
-    //            output.WriteByte((byte)0);
-    //            binaryWriter.Write(key);
-    //            var encoder = (Encoder)new BinaryEncoder(output);
-    //            singleSchemaData.AvroWriter.Write(data, encoder);
-    //            var array = output.ToArray();
-    //            return array;
-    //        }
-    //    }
-    //}
-
-    //public static T DeserializeFromAvro<T>(this ReadOnlyMemory<byte> data)
-    //    where T : ISpecificRecord
-    //{ 
-    //}
-
-
-    public static byte[] SerializeToAvro<T>(this T data)
-        where T : ISpecificRecord
-    {
-        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
-        using var output = new MemoryStream(1024);
-        using var binaryWriter = new BinaryWriter(output);
-        binaryWriter.Write(Encoding.UTF8.GetBytes(typeof(T).FullName));
-        singleSchemaData.AvroWriter.Write(data, new BinaryEncoder(output));
-        var array = output.ToArray();
-        return array;
-    }
-
-    public static T DeserializeFromAvro<T>(this byte[] data)
-        where T : ISpecificRecord
-    {
-        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
-        var start = (Encoding.UTF8.GetBytes(typeof(T).FullName)).Length;
-
-        var subArrayLength = data.Length - start;
-        var subArray = new byte[subArrayLength];
-        Array.Copy(data, start, subArray, 0, subArrayLength);
-
-        using var input = new MemoryStream(subArray);
-        using var avroStream = new MemoryStream(subArray);
-        var datumReader = new SpecificReader<T>(singleSchemaData.WriterSchema, singleSchemaData.WriterSchema);
-        var decoder = new BinaryDecoder(avroStream);
-        return datumReader.Read(default, decoder);
-    }
-
+    #endregion //  ExtractSchemaData
 }

@@ -67,19 +67,6 @@ internal class SchemaRegistryRepository : ISchemaStorageProvider
         return new Schema(id, schema.Definition, date);
     }
 
-    async Task<Schema> ISchemaStorageProvider.GetOrAddSchemaAsync(string key, ProvideNewSchema callback, int version)
-    {
-        SchemaEntity? schema = await TryGetAsync(key, version);
-        if (schema == null)
-        {
-            byte[] definition = await callback(key, version);
-            schema = new SchemaEntity { Key = key, Version = version, Definition = definition };
-            schema = await AddAsync(schema);
-        }
-        var id = new SchemaIdentifier(schema.Key, schema.Version);
-        var date = schema.ModifiedDate ?? throw new ArgumentNullException(nameof(schema.ModifiedDate));
-        return new Schema(id, schema.Definition, date);
-    }
 
     async Task<Schema> ISchemaStorageProvider.GetOrAddSchemaAsync<T>(int version)
     {
@@ -87,7 +74,7 @@ internal class SchemaRegistryRepository : ISchemaStorageProvider
         SchemaEntity? schema = await TryGetAsync(key, version);
         if (schema == null)
         {
-            string schemaData = AvroSchemaGenerator.GenerateSchema<T>();
+            string schemaData = typeof(T).GetAvroSchema();
             byte[] definition = Encoding.UTF8.GetBytes(schemaData);
             schema = new SchemaEntity { Key = key, Version = version, Definition = definition };
             schema = await AddAsync(schema);
