@@ -1,7 +1,7 @@
 ﻿using Avro;
 using Avro.Specific;
-using System.Reflection;
 using Generator.Equals;
+using System.Reflection;
 
 namespace KafkaX;
 

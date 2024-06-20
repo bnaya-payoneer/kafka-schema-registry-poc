@@ -1,5 +1,6 @@
-using Confluent.Kafka;
+using KafkaX;
 using Microsoft.AspNetCore.Mvc;
+using static KafkaX.Constants;
 
 namespace KafkaXWebApp.Controllers;
 [ApiController]
@@ -7,25 +8,21 @@ namespace KafkaXWebApp.Controllers;
 public class DemoController : ControllerBase
 {
     private readonly ILogger<DemoController> _logger;
-    private readonly ProducerConfig _config;
+    private readonly IKafkaProducer _producer;
 
     public DemoController(
         ILogger<DemoController> logger,
-        ProducerConfig config)
+        IKafkaProducer producer)
     {
         _logger = logger;
-        _config = config;
+        _producer = producer;
     }
 
-    [HttpGet]
-    public async Task PostAsync([FromBody] Foo payload)
+    [HttpPost]
+    public async Task PostAsync([FromBody] PersonEntity payload)
     {
-        using IProducer<Ignore, byte[]> producer = new ProducerBuilder<Ignore, byte[]>(_config)
-                                    //.SetValueSerializer(new KafkaJsonSerializer<OrderMessage>())
-                                    //.SetValueSerializer(Serializers.Utf8)
-                                    .Build();
-        //.BuildWithInstrumentation();
-        //await producer.ProduceXAsync(TOPIC, payload);
-        _logger.LogInformation("Produce [{id}]: {product}", payload.Id, payload.Product);
+        var person = payload.FromEntity();
+        await _producer.ProduceXAsync(TOPIC, person);
+        _logger.LogInformation("Person [{name}]: {code}", person.Name, person.Code);
     }
 }

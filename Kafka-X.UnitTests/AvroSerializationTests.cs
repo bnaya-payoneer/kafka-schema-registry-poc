@@ -1,4 +1,3 @@
-using Avro;
 using KafkaX;
 using Xunit.Abstractions;
 

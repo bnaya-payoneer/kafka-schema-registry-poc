@@ -2,10 +2,8 @@
 using Avro.IO;
 using Avro.Specific;
 using Confluent.Kafka;
-using System.Net;
 using System.Reflection;
 using System.Text;
-using Encoder = Avro.IO.Encoder;
 
 namespace KafkaX;
 
