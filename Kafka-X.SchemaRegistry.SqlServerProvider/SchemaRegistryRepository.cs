@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Caching.Memory;
 using System.Text;
-using System.Threading.Tasks;
-using Avro;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 //using Avro;
 //using Avro.Specific;
 //using Avro.Util;
@@ -13,7 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace KafkaX;
 
-internal class SchemaRegistryRepository: ISchemaStorageProvider
+internal class SchemaRegistryRepository : ISchemaStorageProvider
 {
     private readonly SchemaRegistryContext _context;
     private readonly IMemoryCache _cache;
@@ -26,7 +20,7 @@ internal class SchemaRegistryRepository: ISchemaStorageProvider
         SchemaRegistryContext context, IMemoryCache cache)
     {
         _context = context;
-        _cache = cache; 
+        _cache = cache;
     }
 
     #endregion //  Ctor
@@ -64,7 +58,7 @@ internal class SchemaRegistryRepository: ISchemaStorageProvider
     async Task<Schema> ISchemaStorageProvider.GetSchemaAsync(string key, int version)
     {
         SchemaEntity? schema = await TryGetAsync(key, version);
-        if(schema == null)
+        if (schema == null)
         {
             throw new SchemaNotFoundException(key, version);
         }
@@ -76,7 +70,7 @@ internal class SchemaRegistryRepository: ISchemaStorageProvider
     async Task<Schema> ISchemaStorageProvider.GetOrAddSchemaAsync(string key, ProvideNewSchema callback, int version)
     {
         SchemaEntity? schema = await TryGetAsync(key, version);
-        if(schema == null)
+        if (schema == null)
         {
             byte[] definition = await callback(key, version);
             schema = new SchemaEntity { Key = key, Version = version, Definition = definition };
@@ -91,7 +85,7 @@ internal class SchemaRegistryRepository: ISchemaStorageProvider
     {
         string key = typeof(T).FullName ?? throw new ArgumentNullException(nameof(T));
         SchemaEntity? schema = await TryGetAsync(key, version);
-        if(schema == null)
+        if (schema == null)
         {
             string schemaData = AvroSchemaGenerator.GenerateSchema<T>();
             byte[] definition = Encoding.UTF8.GetBytes(schemaData);

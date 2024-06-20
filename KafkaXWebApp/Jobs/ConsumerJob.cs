@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using KafkaX;
-using System.Threading;
 using static KafkaX.Constants;
 
 namespace KafkaXWebApp;

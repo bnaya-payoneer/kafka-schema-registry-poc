@@ -1,9 +1,4 @@
 ﻿using Confluent.Kafka;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // TODO: understand the Message.Key
 
@@ -26,7 +21,7 @@ public class KafkaProducer
         TValue payload,
         int version = -1,
         CancellationToken cancellationToken = default(CancellationToken))
-        //where TValue : IKafkaIdentifier
+    //where TValue : IKafkaIdentifier
     {
         var schema = _storageProvider.GetOrAddSchemaAsync<TValue>(version);
         // TODO: var item = Avro.Serialize(schema, buffer)

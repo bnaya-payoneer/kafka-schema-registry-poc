@@ -1,7 +1,5 @@
 using Confluent.Kafka;
-using KafkaX;
 using Microsoft.AspNetCore.Mvc;
-using static KafkaX.Constants;
 
 namespace KafkaXWebApp.Controllers;
 [ApiController]

@@ -39,6 +39,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka-X.SchemaRegistry.SqlS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.IntegrationTests", "Tests\Kafka-X.IntegrationTests\Kafka-X.IntegrationTests.csproj", "{50927160-C5EF-437F-94E7-D2A8DED3D619}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaX.AvroSerialization", "KafkaX.AvroSerialization\KafkaX.AvroSerialization.csproj", "{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.UnitTests", "Kafka-X.UnitTests\Kafka-X.UnitTests.csproj", "{6D395030-19DA-463A-8A36-2F05ADA0D89E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50927160-C5EF-437F-94E7-D2A8DED3D619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D395030-19DA-463A-8A36-2F05ADA0D89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D395030-19DA-463A-8A36-2F05ADA0D89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D395030-19DA-463A-8A36-2F05ADA0D89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D395030-19DA-463A-8A36-2F05ADA0D89E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

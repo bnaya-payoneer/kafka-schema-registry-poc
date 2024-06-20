@@ -1,6 +1,4 @@
-﻿using KafkaX;
-
-namespace KafkaXWebApp;
+﻿namespace KafkaXWebApp;
 
 public readonly record struct Foo(int Id, string Product, int amount);
 
