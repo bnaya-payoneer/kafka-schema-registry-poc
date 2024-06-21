@@ -27,10 +27,9 @@ public static class AvroSerializationExtensions
 
     #region DeserializeFromAvro
 
-    public static T DeserializeFromAvro<T>(this byte[] data)
+    public static T DeserializeFromAvro<T>(this byte[] data, Schema schema)
         where T : ISpecificRecord
     {
-        SerializerSchemaData<T> singleSchemaData = ExtractSchemaData<T>();
         var start = (Encoding.UTF8.GetBytes(typeof(T).FullName)).Length;
 
         var subArrayLength = data.Length - start;
@@ -39,7 +38,7 @@ public static class AvroSerializationExtensions
 
         using var input = new MemoryStream(subArray);
         using var avroStream = new MemoryStream(subArray);
-        var datumReader = new SpecificReader<T>(singleSchemaData.WriterSchema, singleSchemaData.WriterSchema);
+        var datumReader = new SpecificReader<T>(schema, schema);
         var decoder = new BinaryDecoder(avroStream);
         return datumReader.Read(default, decoder);
     }

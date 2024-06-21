@@ -7,14 +7,14 @@ namespace KafkaXWebApp;
 public class ConsumerJob : BackgroundService
 {
     private readonly ILogger<ConsumerJob> _logger;
-    private readonly IConsumer<Null, byte[]> _consumer;
+    private readonly IKafkaConsumer _consumer;
 
     public ConsumerJob(
         ILogger<ConsumerJob> logger,
-        ConsumerConfig config)
+        IKafkaConsumer consumer)
     {
         _logger = logger;
-        _consumer = new ConsumerBuilder<Null, byte[]>(config).Build();
+        _consumer = consumer;
         _consumer.Subscribe(TOPIC);
 
     }
@@ -23,14 +23,8 @@ public class ConsumerJob : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            var result = await _consumer.ConsumeXAsync<Person>(stoppingToken);
-            var data = result.Message.Value;
+            var data = await _consumer.ConsumeXAsync<Person>(TOPIC, stoppingToken);
             _logger.LogInformation("Consumed [{name}]: {code}", data.Name, data.Code);
         }
-    }
-
-    public override void Dispose()
-    {
-        _consumer.Dispose();
     }
 }

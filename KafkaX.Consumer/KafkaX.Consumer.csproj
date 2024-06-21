@@ -2,11 +2,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="Confluent.Kafka" Version="2.4.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 		<!--<PackageReference Include="Confluent.Kafka.Extensions.Diagnostics" Version="0.4.0" />-->
 	</ItemGroup>
 
-
 	<ItemGroup>
 		<ProjectReference Include="..\KafkaX.Abstractions\KafkaX.Abstractions.csproj" />
+		<ProjectReference Include="..\KafkaX.AvroSerialization\KafkaX.AvroSerialization.csproj" />
 	</ItemGroup>
 </Project>

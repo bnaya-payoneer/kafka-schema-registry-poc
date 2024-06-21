@@ -27,7 +27,7 @@ public class AvroSerializationTests
         var buffer = p.SerializeToAvro();
         _output.WriteLine($"Length: {buffer.Length}");
 
-        var p1 = buffer.DeserializeFromAvro<PersonCls>();
+        var p1 = buffer.DeserializeFromAvro<PersonCls>(schema);
 
         Assert.Equal(p.Name, p1.Name);
         Assert.Equal(p.Code, p1.Code);
