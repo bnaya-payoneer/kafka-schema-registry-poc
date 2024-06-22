@@ -2,7 +2,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='schema_registry' and xtype='
 CREATE TABLE schema_registry (
     [key] NVARCHAR(100) NOT NULL,
     version INT NOT NULL,
-    definition varbinary(max) NOT NULL,
+    definition NVARCHAR(MAX) NOT NULL CHECK (ISJSON(definition) = 1),
     modifiedDate DATETIMEOFFSET NOT NULL,
     type NVARCHAR(50) NOT NULL DEFAULT 'avro',
     PRIMARY KEY ([key], version)

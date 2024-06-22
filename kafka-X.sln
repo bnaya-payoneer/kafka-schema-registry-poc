@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{102EB2CB-2EF8-46AF-970C-D38A70F014C2}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Directory.Build.props = Directory.Build.props
 		ReadMe.md = ReadMe.md
 	EndProjectSection
@@ -37,11 +38,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaXWebApp", "KafkaXWebAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka-X.SchemaRegistry.SqlServerProvider", "Kafka-X.SchemaRegistry.SqlServerProvider\Kafka-X.SchemaRegistry.SqlServerProvider.csproj", "{A19DCC70-84F8-4326-A17B-072F7707C21E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.IntegrationTests", "Tests\Kafka-X.IntegrationTests\Kafka-X.IntegrationTests.csproj", "{50927160-C5EF-437F-94E7-D2A8DED3D619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka-X.IntegrationTests", "Tests\Kafka-X.IntegrationTests\Kafka-X.IntegrationTests.csproj", "{50927160-C5EF-437F-94E7-D2A8DED3D619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaX.AvroSerialization", "KafkaX.AvroSerialization\KafkaX.AvroSerialization.csproj", "{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KafkaX.AvroSerialization", "KafkaX.AvroSerialization\KafkaX.AvroSerialization.csproj", "{7CF62651-7C30-4485-BF06-4D3FDDDF26A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka-X.UnitTests", "Kafka-X.UnitTests\Kafka-X.UnitTests.csproj", "{6D395030-19DA-463A-8A36-2F05ADA0D89E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kafka-X.UnitTests", "Kafka-X.UnitTests\Kafka-X.UnitTests.csproj", "{6D395030-19DA-463A-8A36-2F05ADA0D89E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0AAD6153-0162-4C98-A19F-7FDBC01E483F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +91,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{757E4F75-9E63-403C-ADA9-E1765DA83631} = {54F5D36A-19E7-404F-BD29-95B3F97FD466}
 		{55248068-613F-49DD-8C4C-593232CE7E1A} = {54F5D36A-19E7-404F-BD29-95B3F97FD466}
+		{C75CD7CF-34DD-4DEC-9F3D-8EF8506D5287} = {0AAD6153-0162-4C98-A19F-7FDBC01E483F}
+		{50927160-C5EF-437F-94E7-D2A8DED3D619} = {0AAD6153-0162-4C98-A19F-7FDBC01E483F}
+		{6D395030-19DA-463A-8A36-2F05ADA0D89E} = {0AAD6153-0162-4C98-A19F-7FDBC01E483F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4F4A54C1-6EA4-44C9-B404-BB17A4E8E61B}

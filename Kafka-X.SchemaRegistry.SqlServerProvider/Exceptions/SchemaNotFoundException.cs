@@ -12,7 +12,7 @@ internal class SchemaNotFoundException : Exception
     {
     }
 
-    public SchemaNotFoundException(string key, int version) : base($"Schema not found for key: {key} and version: {version}")
+    public SchemaNotFoundException(string key, int version) : base($"SchemaInfo not found for key: {key} and version: {version}")
     {
     }
 

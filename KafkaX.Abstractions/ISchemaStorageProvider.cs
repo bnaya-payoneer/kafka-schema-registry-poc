@@ -1,8 +1,12 @@
-﻿namespace KafkaX;
+﻿using Avro;
+using Avro.Specific;
+
+namespace KafkaX;
 
 public interface ISchemaStorageProvider
 {
-    Task<Schema> GetSchemaAsync(string key, int version = -1);
-    //Task<Schema> GetOrAddSchemaAsync(string key, ProvideNewSchema callback, int version = -1);
-    Task<Schema> GetOrAddSchemaAsync<T>(int version = -1);
+    Task<Schema> GetSchemaAsync<T>(int version = -1)
+        where T : ISpecificRecord;
+    Task<Schema> GetOrAddSchemaAsync<T>(int version = -1)
+        where T : ISpecificRecord;
 }
