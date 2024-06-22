@@ -1,6 +1,4 @@
-﻿using Confluent.Kafka;
-using KafkaX;
-using static Confluent.Kafka.ConfigPropertyNames;
+﻿using KafkaX;
 using static KafkaX.Constants;
 
 namespace KafkaXWebApp;
@@ -46,7 +44,7 @@ public sealed class ConsumerJob : IHostedLifecycleService
 
     Task IHostedLifecycleService.StartingAsync(CancellationToken cancellationToken)
     {
-        _executing = Task.Factory.StartNew(() => ExecuteAsync(cancellationToken), 
+        _executing = Task.Factory.StartNew(() => ExecuteAsync(cancellationToken),
                                     TaskCreationOptions.LongRunning)
                                .Unwrap();
         return Task.CompletedTask;

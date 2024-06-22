@@ -1,6 +1,4 @@
-using Confluent.Kafka;
 using KafkaXWebApp;
-using static Confluent.Kafka.ConfigPropertyNames;
 
 var builder = WebApplication.CreateBuilder(args);
 

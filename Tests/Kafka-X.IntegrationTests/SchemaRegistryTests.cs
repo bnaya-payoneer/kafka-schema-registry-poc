@@ -1,11 +1,10 @@
 // Ignore Spelling: Sql
 
-using Cocona.Builder;
 using Cocona;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+using Cocona.Builder;
 using KafkaX;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Kafka_X.IntegrationTests;
 
@@ -19,7 +18,7 @@ public class SchemaRegistryTests
         builder.Configuration
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile($"appsettings.json", true, true);
-            //.AddJsonFile($"appsettings.{environmentName}.json", true, true);
+        //.AddJsonFile($"appsettings.{environmentName}.json", true, true);
 
         var services = builder.Services;
         services.AddSchemaRegistryRepository(builder.Configuration);

@@ -1,10 +1,7 @@
 ﻿using Avro;
 using Confluent.Kafka;
-using System;
 
 namespace KafkaX;
-
-// TODO: check whether Stream result (value) is supported
 
 public class KafkaXConsumer : IKafkaXConsumer, IKafkaXConsumerFactory
 {
@@ -26,7 +23,6 @@ public class KafkaXConsumer : IKafkaXConsumer, IKafkaXConsumerFactory
         ConsumeResult<Null, byte[]> message = _consumer.Consume(cancellationToken);
         var headers = message.Message.Headers;
         byte[] data = message.Message.Value;
-        //var keyBuffer = headers.GetLastBytes("schema-key");
         var versionBuffer = headers.GetLastBytes("schema-version");
         int version = BitConverter.ToInt32(versionBuffer);
         Schema schema = await _storageProvider.GetSchemaAsync<TValue>(version);
@@ -40,7 +36,7 @@ public class KafkaXConsumer : IKafkaXConsumer, IKafkaXConsumerFactory
             },
             Topic = message.Topic,
             Partition = message.Partition,
-            Offset = message.Offset,            
+            Offset = message.Offset,
         };
     }
 

@@ -3,9 +3,7 @@
 using Avro;
 using Avro.IO;
 using Avro.Specific;
-using Confluent.Kafka;
 using System.Reflection;
-using System.Text;
 
 namespace KafkaX;
 
@@ -18,7 +16,7 @@ public static class AvroSerializationExtensions
     {
         using var output = new MemoryStream(1024);
         var writer = new SpecificWriter<T>(schema);
-        writer.Write(data, new BinaryEncoder(output)); 
+        writer.Write(data, new BinaryEncoder(output));
         var response = output.ToArray();
         return response;
     }

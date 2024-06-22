@@ -1,11 +1,5 @@
 ﻿using Avro;
-using Avro.Specific;
 using Microsoft.Extensions.Caching.Memory;
-using System.Text;
-//using Avro;
-//using Avro.Specific;
-//using Avro.Util;
-//using Avro.Reflect;
 
 namespace KafkaX;
 
