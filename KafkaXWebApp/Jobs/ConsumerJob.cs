@@ -1,30 +1,68 @@
-﻿using Confluent.Kafka;
-using KafkaX;
+﻿using KafkaX;
 using static KafkaX.Constants;
 
 namespace KafkaXWebApp;
 
-public class ConsumerJob : BackgroundService
+public sealed class ConsumerJob : IHostedLifecycleService
 {
     private readonly ILogger<ConsumerJob> _logger;
-    private readonly IKafkaConsumer _consumer;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private Task _executing = Task.CompletedTask;
 
     public ConsumerJob(
         ILogger<ConsumerJob> logger,
-        IKafkaConsumer consumer)
+        IServiceScopeFactory scopeFactory)
     {
         _logger = logger;
-        _consumer = consumer;
-        _consumer.Subscribe(TOPIC);
-
+        _scopeFactory = scopeFactory;
     }
 
-    protected async override Task ExecuteAsync(CancellationToken stoppingToken)
+    private async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        using (var scope = _scopeFactory.CreateScope())
         {
-            var data = await _consumer.ConsumeXAsync<Person>(TOPIC, stoppingToken);
-            _logger.LogInformation("Consumed [{name}]: {code}", data.Name, data.Code);
+            var factory = scope.ServiceProvider.GetRequiredService<IKafkaXConsumerFactory>();
+            using IKafkaXConsumer consumer = factory.Subscribe(TOPIC);
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                var result = await consumer.ConsumeXAsync<Person>(stoppingToken);
+                var data = result.Message.Value;
+                _logger.LogInformation("Consumed [{name}]: {code}", data.Name, data.Code);
+            }
         }
+    }
+
+    Task IHostedService.StartAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    Task IHostedLifecycleService.StartedAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    Task IHostedLifecycleService.StartingAsync(CancellationToken cancellationToken)
+    {
+        _executing = Task.Factory.StartNew(() => ExecuteAsync(cancellationToken),
+                                    TaskCreationOptions.LongRunning)
+                               .Unwrap();
+        return Task.CompletedTask;
+    }
+
+    Task IHostedService.StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    Task IHostedLifecycleService.StoppedAsync(CancellationToken cancellationToken)
+    {
+        _executing = Task.CompletedTask;
+        return Task.CompletedTask;
+    }
+
+    Task IHostedLifecycleService.StoppingAsync(CancellationToken cancellationToken)
+    {
+        return _executing;
     }
 }

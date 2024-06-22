@@ -1,9 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System.Text;
-//using Avro;
-//using Avro.Specific;
-//using Avro.Util;
-//using Avro.Reflect;
+﻿using Avro;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace KafkaX;
 
@@ -37,7 +33,7 @@ internal class SchemaRegistryRepository : ISchemaStorageProvider
 
     #endregion //  AddAsync
 
-    #region GetAsync
+    #region TryGetAsync
 
     private async Task<SchemaEntity?> TryGetAsync(string key, int version)
     {
@@ -53,34 +49,39 @@ internal class SchemaRegistryRepository : ISchemaStorageProvider
         return entity;
     }
 
-    #endregion //  GetAsync
+    #endregion //  TryGetAsync
 
-    async Task<Schema> ISchemaStorageProvider.GetSchemaAsync(string key, int version)
+    #region GetSchemaAsync
+
+    async Task<Schema> ISchemaStorageProvider.GetSchemaAsync<T>(int version)
     {
-        SchemaEntity? schema = await TryGetAsync(key, version);
-        if (schema == null)
+        string key = typeof(T).FullName ?? throw new ArgumentNullException(nameof(T));
+        SchemaEntity? entity = await TryGetAsync(key, version);
+        if (entity == null)
         {
             throw new SchemaNotFoundException(key, version);
         }
-        var id = new SchemaIdentifier(schema.Key, schema.Version);
-        var date = schema.ModifiedDate ?? throw new ArgumentNullException(nameof(schema.ModifiedDate));
-        return new Schema(id, schema.Definition, date);
+        var result = Schema.Parse(entity.Definition);
+        return result;
     }
 
+    #endregion //  GetSchemaAsync
+
+    #region GetOrAddSchemaAsync
 
     async Task<Schema> ISchemaStorageProvider.GetOrAddSchemaAsync<T>(int version)
     {
         string key = typeof(T).FullName ?? throw new ArgumentNullException(nameof(T));
-        SchemaEntity? schema = await TryGetAsync(key, version);
-        if (schema == null)
+        SchemaEntity? entity = await TryGetAsync(key, version);
+        if (entity == null)
         {
-            string schemaData = typeof(T).GetAvroSchema();
-            byte[] definition = Encoding.UTF8.GetBytes(schemaData);
-            schema = new SchemaEntity { Key = key, Version = version, Definition = definition };
-            schema = await AddAsync(schema);
+            string definition = typeof(T).GetAvroSchema();
+            entity = new SchemaEntity { Key = key, Version = version, Definition = definition };
+            entity = await AddAsync(entity);
         }
-        var id = new SchemaIdentifier(schema.Key, schema.Version);
-        var date = schema.ModifiedDate ?? throw new ArgumentNullException(nameof(schema.ModifiedDate));
-        return new Schema(id, schema.Definition, date);
+        var result = Schema.Parse(entity.Definition);
+        return result;
     }
+
+    #endregion //  GetOrAddSchemaAsync
 }

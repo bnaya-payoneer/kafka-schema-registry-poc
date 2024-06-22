@@ -1,3 +1,5 @@
+// Ignore Spelling: Avro
+
 using KafkaX;
 using Xunit.Abstractions;
 
@@ -24,10 +26,10 @@ public class AvroSerializationTests
         Avro.Schema schema = PersonCls.SCHEMA;
         //Avro.Schema schema = Schema.Parse(typeof(PersonCls).GetAvroSchema());
         _output.WriteLine($"Schema: {schema.ToString()}");
-        var buffer = p.SerializeToAvro();
+        var buffer = schema.SerializeToAvro(p);
         _output.WriteLine($"Length: {buffer.Length}");
 
-        var p1 = buffer.DeserializeFromAvro<PersonCls>(schema);
+        var p1 = schema.DeserializeFromAvro<PersonCls>(buffer);
 
         Assert.Equal(p.Name, p1.Name);
         Assert.Equal(p.Code, p1.Code);

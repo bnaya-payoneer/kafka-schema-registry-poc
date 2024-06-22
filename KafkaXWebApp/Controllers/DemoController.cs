@@ -8,11 +8,11 @@ namespace KafkaXWebApp.Controllers;
 public class DemoController : ControllerBase
 {
     private readonly ILogger<DemoController> _logger;
-    private readonly IKafkaProducer _producer;
+    private readonly IKafkaXProducer _producer;
 
     public DemoController(
         ILogger<DemoController> logger,
-        IKafkaProducer producer)
+        IKafkaXProducer producer)
     {
         _logger = logger;
         _producer = producer;
