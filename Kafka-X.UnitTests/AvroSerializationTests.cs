@@ -31,7 +31,8 @@ public class AvroSerializationTests
 
         var p1 = schema.DeserializeFromAvro<PersonCls>(buffer);
 
-        Assert.Equal(p.Name, p1.Name);
-        Assert.Equal(p.Code, p1.Code);
+        //Assert.Equal(p.Name, p1.Name);
+        //Assert.Equal(p.Code, p1.Code);
+        Assert.Equal(p, p1);
     }
 }

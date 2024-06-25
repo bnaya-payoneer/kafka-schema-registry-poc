@@ -8,8 +8,8 @@ using System.Reflection;
 namespace KafkaX;
 
 // TODO: bnaya 2024-06-22 Source code generation for SpecificAvroRecord without reflection
-
-public class SpecificAvroRecord<T> : ISpecificRecord // where T : new()
+[Equatable]
+public partial class SpecificAvroRecord<T> : ISpecificRecord // where T : new()
 {
     private static readonly PropertyInfo[] PROPS = typeof(T).GetAvroProperties();
     [IgnoreEquality]
